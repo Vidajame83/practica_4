@@ -1,0 +1,12 @@
+# Datos crudos: pueden contener datos personales (LOPDP)
+data/crudos/
+
+# Checkpoints de Jupyter
+.ipynb_checkpoints/
+
+# Archivos de Python
+__pycache__/
+*.pyc
+
+# Secretos (sal, claves)
+.env
