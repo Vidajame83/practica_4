@@ -17,3 +17,17 @@ def agregar_variables(df: pd.DataFrame) -> pd.DataFrame:
     df["grupo_edad"] = pd.cut(df["edad"], bins=[17, 29, 44, 65],
                               labels=["18-29", "30-44", "45-65"])
     return df
+
+
+def anonimizar(df: pd.DataFrame, sal: str) -> pd.DataFrame:
+    """Elimina identificadores directos, seudonimiza la cedula y generaliza edad e ingreso."""
+    import hashlib
+    df = df.drop(columns=["nombre", "fecha_nac"]).copy()
+    df["id_seudonimo"] = df["cedula"].apply(
+        lambda c: hashlib.sha256((sal + str(c)).encode("utf-8")).hexdigest()[:12])
+    df = df.drop(columns=["cedula", "id_persona"])
+    df["rango_edad"] = pd.cut(df["edad"], bins=[10, 20, 30, 40, 50, 60, 70], right=False,
+                             labels=["10-19", "20-29", "30-39", "40-49", "50-59", "60-69"])
+    df = df.drop(columns=["edad"])
+    df["ingreso"] = df["ingreso"].round(-1)
+    return df
